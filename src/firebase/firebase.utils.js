@@ -16,9 +16,12 @@ const config = {
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
 
+  // check if user already exists in db - with documentRef
   const userRef = firestore.doc(`users/${userAuth.uid}`);
+  // get snapshot based on documentRef
   const snapShot = await userRef.get();
 
+  // create doc, if snapshot not found in db
   if (!snapShot.exists) {
     const { displayName, email } = userAuth;
     const createdAt = new Date();
@@ -45,6 +48,7 @@ export const firestore = firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider();
 // trigger google pop-up
 provider.setCustomParameters({ prompt: 'select_account' });
+// sign in with google fn
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
 export default firebase;
